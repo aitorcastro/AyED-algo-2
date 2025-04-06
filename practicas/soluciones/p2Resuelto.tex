@@ -6,5 +6,33 @@
 \date{\today}
 
 \begin{document}
-prueba
+
+\maketitle
+\textbf{Ejercicio 18.} Especificar los siguientes problemas. En todos los casos es recomendable ayudarse escribiendo predicados y funciones auxiliares.
+\begin{itemize}
+    \item[d)]  Se desea especificar el problema positivosAumentados que dada una secuencia $s$ de enteros devuelve la secuencia pero con los valores positivos reemplazados por su valor multiplicado por la posici\'on en que se encuentra.
+    \begin{itemize}
+        \item positivosAumentados$([0, 1, 2, 3, 4, 5]) = [0, 1, 4, 9, 16, 25]$
+
+        \item positivosAumentados$([-2, -1, 5, 3, 0, -4, 7]) = [-2, -1, 10, 9, 0, -4, 42]$
+    \end{itemize}
+
+    \textbf{Soluci\'on:}
+    \begin{proc}{positivosAumentados}{\Inout s: \TLista{\ent} }{}
+        \requiere{s0 = s}
+        \asegura{\\
+            \paraTodo[unalinea]{i}{\ent}{(0 <= i < |s| \yLuego s0[i] > 0) \implicaLuego s[i] = s0[i] \times i } \yLuego \\
+            \paraTodo[unalinea]{i}{\ent}{(0 <= i < |s| \yLuego s0[i] <= 0) \implicaLuego s[i] = s0[i] }\\
+        }
+
+    \end{proc}
+
+
+    \item[e)] Se desea especificar el problema procesarPrefijos que dada una secuencia s de palabras y una palabra p, remueve todas
+    las palabras de s que no tengan como prefijo a p y adem\'as retorna la longitud de la palabra m\'as larga que tiene de prefijo a
+    p. Por ejemplo, dados: s = [``casa'', ``calamar'', ``banco'', ``recuperatorio'', ``aprobar'', ``cansado''] y p = ``ca'' un
+    posible valor para la secuencia s luego de aplicar procesarPrefijos(s, p) puede ser [``casa'', ``calamar'', ``cansado''] y el valor devuelto ser\'a 7.
+\end{itemize}
+
+
 \end{document}
