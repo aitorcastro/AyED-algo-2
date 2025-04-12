@@ -1,0 +1,326 @@
+\documentclass{article}
+\input{AEDmacros}
+\usepackage{titling}
+\usepackage{tikz}
+
+\newenvironment{tad}[1]{
+	\paragraph{} \vspace*{-4mm}
+	\newcommand{\obs}[2]{\texttt{obs} ##1 : ##2}
+
+	\vspace{1ex}
+	\texttt{TAD} \textit{#1} $\{$
+	\par
+	\tocarEspacios
+}
+{
+
+\hspace{2.5mm} $\}$
+\vspace{2ex}
+}
+
+\title{Practica 3 Algoritmos y Estructuras de Datos}
+\author{Aitor}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\textbf{Ejercicio 1.}Especificar en forma completa el TAD NumeroRacional que incluya las operaciones aritm\'eticas b\'asicas (suma,
+resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'umeros racionales devuelva verdadero si son iguales.
+\textbf{Soluci\'on:}
+
+\begin{tad}{NumeroRacional}
+    obs numerador: \ent
+    obs denominador: \ent
+
+    \begin{proc}{nuevoNumeroRacional}{\In n:\ent, \In d:\ent}{numeroRacional}
+        \requiere{d \neq 0}
+        \asegura{res.numerador = n \land res.denominador = d}
+    \end{proc}
+
+    \begin{proc}{suma}{\Inout a: numeroRacional, \In b: numeroRacional}{}
+        \requiere{a = a0}
+        \asegura{
+            a.numerador = a0.numerador * b.denominador + b.numerador * a0.denominador \land \\ 
+            a.denominador = a0.denominador * b.denominador}
+    \end{proc}
+
+    \begin{proc}{resta}{\Inout a: numeroRacional, \In b: numeroRacional}{}
+        \requiere{a = a0}
+        \asegura{a.numerador = a0.numerador * b.denominador - b.numerador * a0.denominador \land \\ 
+        a.denominador = a0.denominador * b.denominador}
+    \end{proc}
+    
+    \begin{proc}{multiplicaci\'on}{\Inout a: numeroRacional, \In b: numeroRacional}{}
+        \requiere{a = a0}
+        \asegura{a.numerador = a0.numerador * b.numerador \land a.denominador = a0.denominador * b.denominador}
+    \end{proc}
+
+    \begin{proc}{divisi\'on}{\Inout a: numeroRacional, \In b: numeroRacional}{}
+        \requiere{a = a0}
+        \requiere{b.numerador \neq 0}
+        \asegura{a.numerador = a0.numerador * b.denominador \land a.denominador = a0.denominador * b.numerador}
+    \end{proc}
+
+\end{tad}
+
+\textbf{Ejercicio 2.} Especifique mediante TADs los siguientes elementos geom\'etricos:
+\begin{itemize}
+    \item[a)] Punto2D, que representa un punto en el plano. Debe contener las siguientes operaciones:
+    \begin{itemize}
+        \item [a)] nuevoPunto: que crea un punto a partir de sus coordenadas x e y.
+        \item [b)] mover : que mueve el punto una determinada distancia sobre los ejes x e y.
+        \item [c)] distancia: que devuelve la distancia entre dos puntos.
+        \item [d)] distanciaAlOrigen: que devuelve la distancia del punto (0, 0).
+    \end{itemize}
+    \textbf{Soluci\'on:}
+    \begin{tad}{Punto2D}
+        obs x: \float \\
+        obs y: \float
+
+        \begin{proc}{nuevoPunto}{\In x:\float, \In y:\float}{punto2D}
+            \requiere{True}
+            \asegura{res.x = x \land res.y = y}
+        \end{proc}
+
+        \begin{proc}{mover}{\Inout p: punto2D, \In dx:\float, \In dy:\float}{}
+            \requiere{p = p0}
+            \asegura{p.x = p0.x + dx \land p.y = p0.y + dy}            
+        \end{proc}
+
+        \aux{distanciaEntrePuntos}{\In p1: punto2D, \In p2: punto2D}{\float}{\sqrt{(p1.x - p2.x)^2 + (p1.y - p2.y)^2}}
+
+        \begin{proc}{distancia}{\In p1: punto2D, \In p2: punto2D}{\float}
+            \requiere{p1 = p0}
+            \asegura{res = distanciaEntrePuntos(p0, p2)}
+        \end{proc}
+
+        \begin{proc}{distanciaAlOrigen}{\In p: punto2D}{\float}
+            \requiere{p = p0}
+            \asegura{res = distanciaEntrePuntos(p0, nuevoPunto(0, 0))}
+        \end{proc}
+    \end{tad}
+
+    \item[b)] Rect\'angulo2D, que representa un rect\'angulo en el plano. Debe contener las siguientes operaciones:
+    \begin{itemize}
+        \item[a)] nuevoRect\'angulo: que crea un rect\'angulo (decida usted cu\'ales deber\'ian ser los par\'ametros).
+        \item[b)] mover : que mueve el rect\'angulo una determinada distancia en los ejes x e y.
+        \item[c)] escalar : que escala el rect\'angulo en un determinado factor. Al escalar un rect\'angulo un punto del mismo debe quedar
+        fijo. En este caso el punto fijo puede ser el centro del rect\'angulo o uno de sus v\'ertices.
+        \item[d)] est\'aContenido: que dados dos rect\'angulos, indique si uno est\'a contenido en el otro.
+    \end{itemize}
+    \textbf{Soluci\'on:}
+    \begin{tad}{Rectangulo2D}
+        obs x1: \float \\
+        obs y1: \float \\
+        obs x2: \float \\
+        obs y2: \float
+    
+    
+
+    \begin{proc}{nuevoRectangulo}{\In x1:\float, \In y1:\float, \In x2:\float, \In y2:\float}{rectangulo2D}
+        \requiere{True}
+        \asegura{res.x1 = x1 \land res.y1 = y1 \land res.x2 = x2 \land res.y2 = y2}
+    \end{proc}
+
+    \begin{proc}{mover}{\Inout r: rectangulo2D, \In dx:\float, \In dy:\float}{}
+        \requiere{r = r0}
+        \asegura{r.x1 = r0.x1 + dx \land r.y1 = r0.y1 + dy \land r.x2 = r0.x2 + dx \land r.y2 = r0.y2 + dy}
+    \end{proc}
+
+    \aux{distancia}{\In x: \float, \In y: \float}{\float}{\sqrt{(x - y)^2}}
+
+    \begin{proc}{escalar}{\Inout r: rectangulo2D, \In factor:\float}{}
+        \requiere{r = r0}
+        \asegura{r.x1 = r0.x1 \land r.y1 = r0.y1 \land \\ 
+        r.x2 = r0.x1 + distancia(x1,x2) * factor \land \\ 
+        r.y2 = r0.y1 + distancia(y1,y2) * factor}       
+    \end{proc}
+
+    \begin{proc}{estaContenido}{\In r1: rectangulo2D, \In r2: rectangulo2D}{\bool}
+        \requiere{True}
+        \asegura{res = (r1.x1 \leq r2.x1 \land r1.y1 \leq r2.y1 \land r1.x2 \geq r2.x2 \land r1.y2 \geq r2.y2) \lor \\
+        (r2.x1 \leq r1.x1 \land r2.y1 \leq r1.y1 \land r2.x2 \geq r1.x2 \land r2.y2 \geq r1.y2)}        
+    \end{proc}
+
+    \end{tad}
+\end{itemize}
+
+\textbf{Ejercicio 3.} 
+\begin{itemize}
+    \item [a)] Especifique el TAD Cola⟨T⟩ con las siguientes operaciones:
+    \begin{itemize}
+        \item [a)] nuevaCola: que crea una cola vac\'ia
+        \item [b)] est\'aVac\'ia: que devuelve true si la cola no contiene elementos
+        \item [c)] encolar: que agrega un elemento al final de la cola
+        \item [d)] desencolar: que elimina el primer elemento de la cola y lo devuelve
+    \end{itemize}
+    \textbf{Soluci\'on:}
+    \begin{tad}{Cola$\langle$T$\rangle$}
+        obs elementos: seq$\langle$T$\rangle$
+
+        \begin{proc}{nuevaCola}{\Inout c: Cola$\langle$T$\rangle$}{}
+            \requiere{True}
+            \asegura{|res.elementos| = 0}
+        \end{proc}
+
+        \begin{proc}{est\'aVac\'ia}{\In c: Cola$\langle$T$\rangle$}{\bool}
+            \requiere{True}
+            \asegura{res = (|c.elementos| = 0)}            
+        \end{proc}
+
+        \begin{proc}{encolar}{\Inout c: Cola$\langle$T$\rangle$, \In e: T}{}
+            \requiere{c = c0}
+            \asegura{|c.elementos = c0.elementos + 1|}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 \leq i < |c0.elementos|) \implicaLuego c.elementos[i] = c0.elementos[i] \land \\
+                c.elementos[|c0.elementos|] = e}
+                }
+        \end{proc}
+
+        \begin{proc}{desencolar}{\Inout c: Cola$\langle$T$\rangle$}{T}
+            \requiere{c = c0}
+            \requiere{|c0.elementos| > 0}
+            \asegura{res = c0.elementos[0]}
+            \asegura{|c.elementos| = |c0.elementos| - 1}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 \leq i < |c.elementos|) \implicaLuego c.elementos[i] = c0.elementos[i + 1]}
+            }
+        \end{proc}
+    \end{tad}
+        
+    \item [b)] Especifique el TAD Pila⟨T⟩ con las siguientes operaciones:
+    \begin{itemize}
+        \item [a)] nuevaPila: que crea una pila vac\'ia
+        \item [b)] est\'aVacia: que devuelve true si la pila no contiene elementos
+        \item [c)] apilar: que agrega un elemento al tope de la pila
+        \item [d)] desapilar: que elimina el elemento del tope de la pila y lo devuelve
+    \end{itemize}
+    \textbf{Soluci\'on:}
+    \begin{tad}{Pila$\langle$T$\rangle$}
+        obs elementos: seq$\langle$T$\rangle$
+
+        \begin{proc}{nuevaPila}{\Inout p: Pila$\langle$T$\rangle$}{}
+            \requiere{True}
+            \asegura{|res.elementos| = 0}
+        \end{proc}
+
+        \begin{proc}{est\'aVacia}{\In p: Pila$\langle$T$\rangle$}{\bool}
+            \requiere{True}
+            \asegura{res = (|p.elementos| = 0)}            
+        \end{proc}
+
+        \begin{proc}{apilar}{\Inout p: Pila$\langle$T$\rangle$, \In e: T}{}
+            \requiere{p = p0}
+            \asegura{|p.elementos| = |p0.elementos| + 1|}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 \leq i < |p.elementos|) \implicaLuego p.elementos[i] = p0.elementos[i] \land \\
+                p.elementos[|p0.elementos|] = e}
+                }
+        \end{proc}
+
+        \begin{proc}{desapilar}{\Inout p: Pila$\langle$T$\rangle$}{T}
+            \requiere{p = p0}
+            \requiere{|p0.elementos| > 0}
+            \asegura{res = p0.elementos[|p0.elementos| - 1]}
+            \asegura{|p.elementos| = |p0.elementos| - 1|}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 < i < |p.elementos|) \implicaLuego p.elementos[i] = p0.elementos[i - 1]}
+            }
+        \end{proc}
+        
+    \end{tad}
+
+    \item [c)] Especifique el TAD DobleCola⟨T ⟩, en el que los elementos pueden insertarse al principio o al final y se eliminan por el
+    medio. Debe contener las operaciones nuevaDobleCola, est\'aVac\'ia, encolarAdelante, encolarAtr\'as y desencolar.
+
+    \begin{tad}{DobleCola$\langle$T$\rangle$}
+        obs elementos: seq$\langle$T$\rangle$
+
+        \begin{proc}{nuevaDobleCola}{\Inout dc: DobleCola$\langle$T$\rangle$}{}
+            \requiere{True}
+            \asegura{|res.elementos| = 0}
+        \end{proc}
+
+        \begin{proc}{est\'aVac\'ia}{\In dc: DobleCola$\langle$T$\rangle$}{\bool}
+            \requiere{True}
+            \asegura{res = (|dc.elementos| = 0)}            
+        \end{proc}
+
+        \begin{proc}{encolarAdelante}{\Inout dc: DobleCola$\langle$T$\rangle$, \In e: T}{}
+            \requiere{dc = dc0}
+            \asegura{|dc.elementos| = |dc0.elementos| + 1|}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 < i < |dc.elementos|) \implicaLuego dc.elementos[i] = dc0.elementos[i - 1] \land \\ 
+                dc.elementos[0] = e}
+                }
+        \end{proc}
+
+        \begin{proc}{encolarAtras}{\Inout dc: DobleCola$\langle$T$\rangle$, \In e: T}{}
+            \requiere{dc = dc0}
+            \asegura{|dc.elementos| = |dc0.elementos| + 1|}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 < i < |dc.elementos|) \implicaLuego dc.elementos[i] = dc0.elementos[i] \land \\ 
+                dc.elementos[|dc0.elementos|] = e}
+                }
+        \end{proc}
+
+        \begin{proc}{desencolar}{\Inout dc: DobleCola$\langle$T$\rangle$}{T}
+            \requiere{dc = dc0}
+            \requiere{|dc0.elementos| > 0}
+            \asegura{res = dc0.elementos[|dc0.elementos| / 2]}
+            \asegura{|dc.elementos| = |dc0.elementos| - 1|}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 \leq i < |dc0.elementos| / 2) \implicaLuego dc.elementos[i] = dc0.elementos[i] \land \\
+                (|dc0.elementos| / 2 < i < |dc0.elementos|) \implicaLuego dc.elementos[i-1] = dc0.elementos[i]} 
+            }
+        \end{proc}
+        
+    \end{tad}
+\end{itemize}
+
+\textbf{Ejercicio 4.}
+\begin{itemize}
+    \item [a)] Especifique el TAD Diccionario⟨K, V ⟩ con las siguientes operaciones:
+    \begin{itemize}
+        \item [a)] nuevoDiccionario: que crea un diccionario vac\'io
+        \item [b)] definir : que agrega un par clave-valor al diccionario
+        \item [c)] obtener : que devuelve el valor asociado a una clave
+        \item [d)] est\'a: que devuelve true si la clave est\'a en el diccionario
+        \item [e)] borrar : que elimina una clave del diccionario
+    \end{itemize}
+    \item [b)] Especifique el TAD DiccionarioConHistoria⟨K, V ⟩. El mismo permite consultar, para cada clave, todos los valores que se
+    asociaron con la misma a lo largo del tiempo (en orden). Se debe poder hacer dicha consulta a\'un si la clave fue borrada.
+\end{itemize}
+
+\textbf{Ejercicio 5.} Especifique los TADs indicados a continuaci\'on pero utilizando los observadores propuestos:
+\begin{itemize}
+    \item [a)] Diccionario⟨K, V ⟩ observado con conjunto (de tuplas)
+    \item [b)] Pila⟨T ⟩ observado con diccionarios
+    \item [c)] Punto observado con coordenadas polares
+\end{itemize}
+
+\textbf{Ejercicio 6.} Especificar TADs para las siguientes estructuras:
+\begin{itemize}
+    \item [a)] Multiconjunto⟨T ⟩
+    Tambi\'en conocido como multiset o bag. Es igual a un conjunto pero con duplicados: cada elemento puede agregarse
+    m\'ultiples veces. Tiene las mismas operaciones que el TAD Conjunto, m\'as una operaci\'on que indica la multiplicidad de
+    un elemento (la cantidad de veces que ese elemento se encuentra en la estructura). N\'otese que si un elemento es eliminado
+    del multiconjunto, se reduce en 1 la multiplicidad. Ejemplo:
+    \item [b)] Multidict⟨K, V ⟩
+    Misma idea pero para diccionarios: Cada clave puede estar asociada con m\'ultiples valores. Los valores se definen de a uno
+    (indicando una clave y un valor), pero la operaci\'on obtener debe devolver todos los valores asociados a una determinada
+    clave.
+    \textit{Nota:} En este ejercicio deber\'a tomar algunas decisiones. ¿Se pueden asociar m\'ultiples veces un mismo valor con una clave? ¿Qu\'e pasa en ese caso? Qu\'e par\'ametros tiene y c\'omo se comporta la operaci\'on borrar? Imagine un caso de uso para esta estructura y utilice su sentido com\'un para tomar estas decisiones.
+\end{itemize}
+
+\textbf{Ejercicio 7.} Especifique el TAD Contadores que, dada una lista de eventos, permite contar la cantidad de veces que se
+produjo cada uno de ellos. La lista de eventos es fija. El TAD debe tener una operaci\'on para incrementar el contador asociado
+a un evento y una operaci\'on para conocer el valor actual del contador para un evento.
+\begin{itemize}
+    \item[•] Modifique el TAD para que sea posible preguntar el valor del contador en un determinado momento del pasado. Si necesita conocer la fecha y hora actual, puede pasarla como par\'ametro a los procedimientos. Asuma que las fechas son n\'umeros enteros (por ejemplo, la cantidad de segundos desde el 1 de enero de 1970).
+\end{itemize}
+
+
+\end{document}
