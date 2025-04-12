@@ -3,6 +3,8 @@
 \usepackage{titling}
 \usepackage{tikz}
 
+%Environment para tad
+%///////////////////////////
 \newenvironment{tad}[1]{
 	\paragraph{} \vspace*{-4mm}
 	\newcommand{\obs}[2]{\texttt{obs} ##1 : ##2}
@@ -17,6 +19,7 @@
 \hspace{2.5mm} $\}$
 \vspace{2ex}
 }
+%///////////////////////////
 
 \title{Practica 3 Algoritmos y Estructuras de Datos}
 \author{Aitor}
@@ -160,7 +163,7 @@ resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'um
     \begin{tad}{Cola$\langle$T$\rangle$}
         obs elementos: seq$\langle$T$\rangle$
 
-        \begin{proc}{nuevaCola}{\Inout c: Cola$\langle$T$\rangle$}{}
+        \begin{proc}{nuevaCola}{}{Cola$\langle$T$\rangle$}
             \requiere{True}
             \asegura{|res.elementos| = 0}
         \end{proc}
@@ -201,7 +204,7 @@ resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'um
     \begin{tad}{Pila$\langle$T$\rangle$}
         obs elementos: seq$\langle$T$\rangle$
 
-        \begin{proc}{nuevaPila}{\Inout p: Pila$\langle$T$\rangle$}{}
+        \begin{proc}{nuevaPila}{}{Pila$\langle$T$\rangle$}
             \requiere{True}
             \asegura{|res.elementos| = 0}
         \end{proc}
@@ -238,7 +241,7 @@ resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'um
     \begin{tad}{DobleCola$\langle$T$\rangle$}
         obs elementos: seq$\langle$T$\rangle$
 
-        \begin{proc}{nuevaDobleCola}{\Inout dc: DobleCola$\langle$T$\rangle$}{}
+        \begin{proc}{nuevaDobleCola}{}{DobleCola$\langle$T$\rangle$}
             \requiere{True}
             \asegura{|res.elementos| = 0}
         \end{proc}
@@ -276,13 +279,12 @@ resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'um
                 (|dc0.elementos| / 2 < i < |dc0.elementos|) \implicaLuego dc.elementos[i-1] = dc0.elementos[i]} 
             }
         \end{proc}
-        
     \end{tad}
 \end{itemize}
 
 \textbf{Ejercicio 4.}
 \begin{itemize}
-    \item [a)] Especifique el TAD Diccionario⟨K, V ⟩ con las siguientes operaciones:
+    \item [a)] Especifique el TAD Diccionario⟨K, V⟩ con las siguientes operaciones:
     \begin{itemize}
         \item [a)] nuevoDiccionario: que crea un diccionario vac\'io
         \item [b)] definir : que agrega un par clave-valor al diccionario
@@ -290,6 +292,47 @@ resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'um
         \item [d)] est\'a: que devuelve true si la clave est\'a en el diccionario
         \item [e)] borrar : que elimina una clave del diccionario
     \end{itemize}
+
+    \begin{tad}{Diccionario$\langle$K, V$\rangle$}
+        obs clavesValores: seq$\langle$struct$\langle$key: K, val: V$\rangle$$\rangle$
+
+        \begin{proc}{nuevoDiccionario}{}{Diccionario$\langle$K, V$\rangle$}
+            \requiere{True}
+            \asegura{|res.clavesValores| = 0}
+        \end{proc}
+
+        \begin{proc}{definir}{\Inout d: Diccionario$\langle$K, V$\rangle$, \In k: K, \In v: V}{}
+            \requiere{d = d0}
+            \asegura{|d.clavesValores| = |d0.clavesValores| + 1|}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 < i < |d.clavesValores|) \implicaLuego d.clavesValores[i] = d0.clavesValores[i] \land \\ 
+                (d.clavesValores[|d0.clavesValores|].key = k \land d.clavesValores[|d0.clavesValores|].val = v)}
+                }
+        \end{proc}
+
+        \begin{proc}{obtener}{\In d: Diccionario$\langle$K, V$\rangle$, \In k: K}{V}
+            \requiere{|d.clavesValores| > 0}
+            \requiere{esta(d, k)}
+            \asegura{\existe[unalinea]{i}{\ent}{(0 \leq i < |d.clavesValores|) \land d.clavesValores[i].key = k \land res = d.clavesValores[i].val}}
+        \end{proc}
+
+        \begin{proc}{esta}{\In d: Diccionario$\langle$K, V$\rangle$, \In k: K}{\bool}
+            \requiere{True}
+            \asegura{res = \existe[unalinea]{i}{\ent}{(0 \leq i < |d.clavesValores|) \land d.clavesValores[i].key = k}}
+        \end{proc}
+        
+        \begin{proc}{borrar}{\Inout d: Diccionario$\langle$K, V$\rangle$, \In k: K}{}
+            \requiere{d = d0}
+            \requiere{esta(d0, k)}
+            \asegura{|d.clavesValores| = |d0.clavesValores| - 1|}
+            \asegura{\paraTodo[unalinea]{i}{\ent}{
+                (0 \leq i < |d.clavesValores|) \implicaLuego 
+                (d.clavesValores[i].key \neq k \implicaLuego d.clavesValores[i] = d0.clavesValores[i])}
+            }
+            \end{proc}
+        
+    \end{tad}
+
     \item [b)] Especifique el TAD DiccionarioConHistoria⟨K, V ⟩. El mismo permite consultar, para cada clave, todos los valores que se
     asociaron con la misma a lo largo del tiempo (en orden). Se debe poder hacer dicha consulta a\'un si la clave fue borrada.
 \end{itemize}
