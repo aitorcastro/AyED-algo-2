@@ -351,29 +351,6 @@ resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'um
     m\'ultiples veces. Tiene las mismas operaciones que el TAD Conjunto, m\'as una operaci\'on que indica la multiplicidad de
     un elemento (la cantidad de veces que ese elemento se encuentra en la estructura). N\'otese que si un elemento es eliminado
     del multiconjunto, se reduce en 1 la multiplicidad. Ejemplo:
-    \begin{tad}{Multiconjunto$\langle$T$\rangle$}
-        obs elementos: $seq\langle struct\langle e: T, multi: \ent\rangle\rangle$
-        
-        \begin{proc}{nuevoMulticonjunto}{}{Multiconjunto$\langle$T$\rangle$}
-            \requiere{True}
-            \asegura{|res.elementos| = 0}            
-        \end{proc}
-
-        \begin{proc}{vacio}{\In mc: Multiconjunto$\langle$T$\rangle$}{\bool}
-            \requiere{True}
-            \asegura{res \iff (|mc.elementos| = 0)}
-        \end{proc}
-
-        \begin{proc}{multiplicidad}{\In mc: Multiconjunto$\langle$T$\rangle$, \In e: T}{\ent}
-            \requiere{\existe[unalinea]{i}{\ent}{(0 \leq i < |mc.elementos|) \land mc.elementos[i].e = e}}
-            \asegura{\existe[unalinea]{i}{\ent}{(0 \leq i < |mc.elementos|) \land mc.elementos[i].e = e \land res = mc.elementos[i].multi}}
-        \end{proc}
-        incompletoooo
-    \end{tad}
-
-
-
-
     \item [b)] Multidict⟨K, V ⟩
     Misma idea pero para diccionarios: Cada clave puede estar asociada con m\'ultiples valores. Los valores se definen de a uno
     (indicando una clave y un valor), pero la operaci\'on obtener debe devolver todos los valores asociados a una determinada
