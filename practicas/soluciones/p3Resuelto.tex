@@ -346,11 +346,34 @@ resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'um
 
 \textbf{Ejercicio 6.} Especificar TADs para las siguientes estructuras:
 \begin{itemize}
-    \item [a)] Multiconjunto⟨T ⟩
+    \item [a)] Multiconjunto⟨T⟩
     Tambi\'en conocido como multiset o bag. Es igual a un conjunto pero con duplicados: cada elemento puede agregarse
     m\'ultiples veces. Tiene las mismas operaciones que el TAD Conjunto, m\'as una operaci\'on que indica la multiplicidad de
     un elemento (la cantidad de veces que ese elemento se encuentra en la estructura). N\'otese que si un elemento es eliminado
     del multiconjunto, se reduce en 1 la multiplicidad. Ejemplo:
+    \begin{tad}{Multiconjunto$\langle$T$\rangle$}
+        obs elementos: $seq\langle struct\langle e: T, multi: \ent\rangle\rangle$
+        
+        \begin{proc}{nuevoMulticonjunto}{}{Multiconjunto$\langle$T$\rangle$}
+            \requiere{True}
+            \asegura{|res.elementos| = 0}            
+        \end{proc}
+
+        \begin{proc}{vacio}{\In mc: Multiconjunto$\langle$T$\rangle$}{\bool}
+            \requiere{True}
+            \asegura{res \iff (|mc.elementos| = 0)}
+        \end{proc}
+
+        \begin{proc}{multiplicidad}{\In mc: Multiconjunto$\langle$T$\rangle$, \In e: T}{\ent}
+            \requiere{\existe[unalinea]{i}{\ent}{(0 \leq i < |mc.elementos|) \land mc.elementos[i].e = e}}
+            \asegura{\existe[unalinea]{i}{\ent}{(0 \leq i < |mc.elementos|) \land mc.elementos[i].e = e \land res = mc.elementos[i].multi}}
+        \end{proc}
+        incompletoooo
+    \end{tad}
+
+
+
+
     \item [b)] Multidict⟨K, V ⟩
     Misma idea pero para diccionarios: Cada clave puede estar asociada con m\'ultiples valores. Los valores se definen de a uno
     (indicando una clave y un valor), pero la operaci\'on obtener debe devolver todos los valores asociados a una determinada
@@ -362,8 +385,100 @@ resta, divisi\'on, multiplicaci\'on) y una operaci\'on igual que dados dos n\'um
 produjo cada uno de ellos. La lista de eventos es fija. El TAD debe tener una operaci\'on para incrementar el contador asociado
 a un evento y una operaci\'on para conocer el valor actual del contador para un evento.
 \begin{itemize}
-    \item[•] Modifique el TAD para que sea posible preguntar el valor del contador en un determinado momento del pasado. Si necesita conocer la fecha y hora actual, puede pasarla como par\'ametro a los procedimientos. Asuma que las fechas son n\'umeros enteros (por ejemplo, la cantidad de segundos desde el 1 de enero de 1970).
+    \item Modifique el TAD para que sea posible preguntar el valor del contador en un determinado momento del pasado. Si necesita conocer la fecha y hora actual, puede pasarla como par\'ametro a los procedimientos. Asuma que las fechas son n\'umeros enteros (por ejemplo, la cantidad de segundos desde el 1 de enero de 1970).
 \end{itemize}
 
+\textbf{Ejercicio 8.} Un cach\'e es una capa de almacenamiento de datos de alta velocidad que almacena un subconjunto de datos,
+normalmente transitorios, de modo que las solicitudes futuras de dichos datos se atienden con mayor rapidez que si se debe
+acceder a los datos desde la ubicaci\'on de almacenamiento principal. El almacenamiento en cach\'e permite reutilizar de forma
+eficaz los datos recuperados o procesados anteriormente.
+Esta estructura comunmente tiene una interface de diccionario: guarda valores asociados a claves, con la diferencia de
+que los datos almacenados en un cache pueden desaparecer en cualquier momento, en funci\'on de diferentes criterios.
+Especificar caches gen\'ericos (con claves de tipo K y valores de tipo V) que respeten las operaciones indicadas y las
+siguientes pol\'iticas de borrado autom\'atico. Si necesita conocer la fecha y hora actual, puede pasarla como par\'ametro a los
+procedimientos o bien puede asumir que existe una funci\'on externa horaActual() : Z que retorna la fecha y hora actual.
+Asuma que las fechas son n\'umeros enteros (por ejemplo, la cantidad de segundos desde el 1 de enero de 1970).
+\begin{tad}{TAD Cache⟨K, V ⟩}
+    proc esta(in c: Cache⟨K, V ⟩, in k: K) : Bool
+    proc obtener(in c: Cache⟨K, V ⟩, in k: K) : V
+    proc definir(inout c: Cache⟨K, V ⟩, in k: K)
+\end{tad}
+\begin{itemize}
+    \item [a)] FIFO o first-in-first-out:
+    El cache tiene una capacidad m\'axima (m\'aximo n\'umero de claves). Si se alcanza esa capacidad m\'axima se borra autom\'ati-
+    camente la clave que fue definida por primera vez hace m\'as tiempo.
+    \item [b)] LRU o last-recently-used:
+    El cache tiene una capacidad m\'axima (m\'aximo n\'umero de claves). Si se alcanza esa capacidad m\'axima se borra autom\'ati-
+    camente la clave que fue accedida por \'ultima vez hace m\'as tiempo. Si no fue accedida nunca, se considera el momento en
+    que fue agregada.
+    \item [c)] TTL o time-to-live:
+    El cache tiene asociado un m\'aximo tiempo de vida para sus elementos. Los elementos se borran autom\'aticamente cuando
+    se alcanza el tiempo de vida (contando desde que fueron agregados por \'ultima vez).
+\end{itemize}
 
+\textbf{Ejercicio 9.} Especifique tipos para un robot que realiza un camino a trav\'es de un plano de coordenadas cartesianas (enteras),
+es decir, tiene operaciones para ubicarse en un coordenada, avanzar hacia arriba, hacia abajo, hacia la derecha y hacia la
+izquierda, preguntar por la posici\'on actual, saber cu\'antas veces pas\'o por una coordenada dada y saber cu\'al es la coordenada
+m\'as a la derecha por d\'onde pas\'o. Indique observadores y precondici\'on/postcondici\'on para cada operaci\'on:
+Coord es struct {x :Z, y :Z}
+TAD Robot \{
+proc ubicarse(inout r: Robot, in c: Coord)
+proc arriba(inout r: Robot)
+proc abajo(inout r: Robot)
+proc izquierda(inout r: Robot)
+proc derecha(inout r: Robot)
+proc coordActual(in r: Robot) : in c: Coord
+proc m\'asDerecha(in r: Robot) : Z
+proc cuantasVecesPaso(in r: Robot, in c: Coord) : Z
+\}
+\textbf{Ejercicio 10.} Queremos modelar el funcionamiento de un vivero. El vivero arranca su actividad sin ninguna planta y con
+un monto inicial de dinero.
+Las plantas las compramos en un mayorista que nos vende la cantidad que deseemos pero solamente de a una especie
+por vez. Como vivimos en un pa\'is con inflaci\'on, cada vez que vamos a comprar tenemos un precio diferente para la misma
+planta. Para poder comprar plantas tenemos que tener suficiente dinero disponible, ya que el mayorista no acepta fiarnos.
+A cada planta le ponemos un precio de venta por unidad. Ese precio tenemos que poder cambiarlo todas las veces que
+necesitemos. Para simplificar el problema, asumimos que las plantas las vendemos de a un ejemplar (cada venta involucra
+un solo ejemplar de una \'unica especie). Por supuesto que para poder hacer una venta tenemos que tener stock de esa planta
+y tenemos que haberle fijado un precio previamente. Adem\'as, se quiere saber en todo momento cu\'al es el balance de caja,
+es decir, el dinero que tiene disponible el vivero.
+\begin{itemize}
+    \item[a)] Indique las operaciones (procs) del TAD con todos sus par\'ametros.
+    \item[b)] Describa el TAD en forma completa, indicando sus observadores, los requiere y asegura de las operaciones. Puede agregar
+    los predicados y funciones auxiliares que necesite, con su correspondiente definici\'on
+    \item[c)] ¿qu\'e cambiar\'ia si supi\'eramos a priori que cada vez que compramos en el mayorista pagamos exactamente el 10 % m\'as
+    que la vez anterior? Describa los cambios en palabras.
+\end{itemize}
+\textbf{Ejercicio 11.} Se desea modelar mediante un TAD un videojuego de guerra desde el punto de vista de un \'unico jugador.
+En el videojuego es posible ir a las tabernas y contratar mercenarios. Al contratarlo se nos informa el indicador de poder
+que tiene y el costo que tienen sus servicios. El poder de un mercenario siempre es positivo, sino nadie querr\'ia contratarlo.
+Los mercenarios no aceptan una promesa de pago, por lo que el jugador deber\'a tener el dinero suficiente para pagarle. El
+jugador puede juntar la cantidad de mercenarios que desee para poder formar batallones. El poder de los batallones es igual
+a la suma del poder de cada uno de los mercenarios que lo componen. Cada mercenario puede pertenecer a un solo batall\'on.
+El jugador comienza con un monto de dinero inicial determinado por el juego. A su vez, comienza con un s\'olo territorio
+bajo su dominio. El objetivo del juego es conquistar la mayor cantidad de territorios posible para dominar el continente.
+Para ello, el jugador puede tomar uno de sus batallones y atacar un territorio enemigo. Al momento de atacar se conoce la
+fuerza del batall\'on enemigo. El jugador resulta vencedor si tiene m\'as poder que el enemigo, en ese caso se anexa el territorio
+y se ganan 1000 monedas. Caso contrario, se debe pagar por la derrota una suma de 500 monedas. El jugador no puede ir a
+pelear si no tiene dinero para financiar su derrota.
+Adem\'as, se desea saber en todo momento la cantidad de territorios anexados y el dinero disponible.
+Se pide:
+\begin{itemize}
+    \item[a)] Indique las operaciones (procs) del TAD con todos sus par\'ametros.
+    \item[b)] Describa el TAD en forma completa, indicando sus observadores, los requiere y asegura de las operaciones. Puede agregar
+    los predicados y funciones auxiliares que necesite, con su correspondiente definici\'on
+\end{itemize}
+\textbf{Ejercicio 12.} Se quiere organizar un viaje de estudios entre un grupo de estudiantes. Al definir el viaje se sabe qu\'e personas
+viajan y los costos de los pasajes, as\'i como el costo del combustible para un auto. Como el costo de pasajes es m\'as alto que
+el del combustible, se quiere que todos viajen en auto, pero inicialmente no se sabe de cu\'antos se dispondr\'a.
+A medida que se van confirmando autos disponibles se podr\'a asignar pasajeros a cada uno. Por razones de seguridad no
+se pueden asignar m\'as de cuatro pasajeros a cada auto. Naturalmente el due˜no de cada auto debe quedar asignado al suyo
+y nadie puede estar asignado a m\'as de un auto. Una persona puede haber sido asignada a un auto pero luego confirmar el
+propio. Si pasa eso, el auto en el que iba a viajar esa persona antes de conseguir el suyo queda sin pasajeros para poder
+repartir todas esas personas.
+Se quiere poder saber el costo total del viaje, es decir, el costo en pasajes sumado al costo en combustible para todos los
+autos.
+\begin{itemize}
+    \item[a)] Indique las operaciones (procs) del TAD con todos sus par\'ametros.
+    \item[b)] Describa el TAD en forma completa, indicando sus observadores, los requiere y asegura de las operaciones. Puede agregar los predicados y funciones auxiliares que necesite, con su correspondiente definici\'on.
+\end{itemize}
 \end{document}
