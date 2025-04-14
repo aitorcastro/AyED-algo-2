@@ -396,17 +396,7 @@ Asuma que las fechas son n\'umeros enteros (por ejemplo, la cantidad de segundos
 es decir, tiene operaciones para ubicarse en un coordenada, avanzar hacia arriba, hacia abajo, hacia la derecha y hacia la
 izquierda, preguntar por la posici\'on actual, saber cu\'antas veces pas\'o por una coordenada dada y saber cu\'al es la coordenada
 m\'as a la derecha por d\'onde pas\'o. Indique observadores y precondici\'on/postcondici\'on para cada operaci\'on:
-Coord es struct {x :Z, y :Z}\\
-TAD Robot \{ \\
-proc ubicarse(inout r: Robot, in c: Coord) \\
-proc arriba(inout r: Robot) \\
-proc abajo(inout r: Robot) \\
-proc izquierda(inout r: Robot) \\
-proc derecha(inout r: Robot) \\
-proc coordActual(in r: Robot) : in c: Coord \\
-proc m\'asDerecha(in r: Robot) : Z \\
-proc cuantasVecesPaso(in r: Robot, in c: Coord) : Z \\
-\}\\
+Coord es struct {x :Z, y :Z}
 \newpage
 \textbf{Soluci\'on:}
 \begin{tad}{Robot}
@@ -469,15 +459,7 @@ proc cuantasVecesPaso(in r: Robot, in c: Coord) : Z \\
 \end{tad}
 
 \textbf{Ejercicio 10.} Queremos modelar el funcionamiento de un vivero. El vivero arranca su actividad sin ninguna planta y con
-un monto inicial de dinero.
-Las plantas las compramos en un mayorista que nos vende la cantidad que deseemos pero solamente de a una especie
-por vez. Como vivimos en un pa\'is con inflaci\'on, cada vez que vamos a comprar tenemos un precio diferente para la misma
-planta. Para poder comprar plantas tenemos que tener suficiente dinero disponible, ya que el mayorista no acepta fiarnos.
-A cada planta le ponemos un precio de venta por unidad. Ese precio tenemos que poder cambiarlo todas las veces que
-necesitemos. Para simplificar el problema, asumimos que las plantas las vendemos de a un ejemplar (cada venta involucra
-un solo ejemplar de una \'unica especie). Por supuesto que para poder hacer una venta tenemos que tener stock de esa planta
-y tenemos que haberle fijado un precio previamente. Adem\'as, se quiere saber en todo momento cu\'al es el balance de caja,
-es decir, el dinero que tiene disponible el vivero.
+un monto inicial de dinero. Las plantas las compramos en un mayorista que nos vende la cantidad que deseemos pero solamente de a una especie por vez. Como vivimos en un pa\'is con inflaci\'on, cada vez que vamos a comprar tenemos un precio diferente para la misma planta. Para poder comprar plantas tenemos que tener suficiente dinero disponible, ya que el mayorista no acepta fiarnos. A cada planta le ponemos un precio de venta por unidad. Ese precio tenemos que poder cambiarlo todas las veces que necesitemos. Para simplificar el problema, asumimos que las plantas las vendemos de a un ejemplar (cada venta involucra un solo ejemplar de una \'unica especie). Por supuesto que para poder hacer una venta tenemos que tener stock de esa planta y tenemos que haberle fijado un precio previamente. Adem\'as, se quiere saber en todo momento cu\'al es el balance de caja, es decir, el dinero que tiene disponible el vivero.
 \begin{itemize}
     \item[a)] Indique las operaciones (procs) del TAD con todos sus par\'ametros.
     \item[b)] Describa el TAD en forma completa, indicando sus observadores, los requiere y asegura de las operaciones. Puede agregar
