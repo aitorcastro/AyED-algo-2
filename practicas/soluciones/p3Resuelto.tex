@@ -375,11 +375,10 @@ Especificar caches gen\'ericos (con claves de tipo K y valores de tipo V) que re
 siguientes pol\'iticas de borrado autom\'atico. Si necesita conocer la fecha y hora actual, puede pasarla como par\'ametro a los
 procedimientos o bien puede asumir que existe una funci\'on externa horaActual() : Z que retorna la fecha y hora actual.
 Asuma que las fechas son n\'umeros enteros (por ejemplo, la cantidad de segundos desde el 1 de enero de 1970).
-\begin{tad}{TAD Cache⟨K, V ⟩}
-    proc esta(in c: Cache⟨K, V ⟩, in k: K) : Bool
-    proc obtener(in c: Cache⟨K, V ⟩, in k: K) : V
-    proc definir(inout c: Cache⟨K, V ⟩, in k: K)
-\end{tad}
+\indent TAD Cache⟨K, V ⟩\\
+\indent \indent proc esta(in c: Cache⟨K, V ⟩, in k: K) : Bool\\
+\indent \indent proc obtener(in c: Cache⟨K, V ⟩, in k: K) : V\\
+\indent \indent proc definir(inout c: Cache⟨K, V ⟩, in k: K)
 \begin{itemize}
     \item [a)] FIFO o first-in-first-out:
     El cache tiene una capacidad m\'axima (m\'aximo n\'umero de claves). Si se alcanza esa capacidad m\'axima se borra autom\'ati-
@@ -397,17 +396,78 @@ Asuma que las fechas son n\'umeros enteros (por ejemplo, la cantidad de segundos
 es decir, tiene operaciones para ubicarse en un coordenada, avanzar hacia arriba, hacia abajo, hacia la derecha y hacia la
 izquierda, preguntar por la posici\'on actual, saber cu\'antas veces pas\'o por una coordenada dada y saber cu\'al es la coordenada
 m\'as a la derecha por d\'onde pas\'o. Indique observadores y precondici\'on/postcondici\'on para cada operaci\'on:
-Coord es struct {x :Z, y :Z}
-TAD Robot \{
-proc ubicarse(inout r: Robot, in c: Coord)
-proc arriba(inout r: Robot)
-proc abajo(inout r: Robot)
-proc izquierda(inout r: Robot)
-proc derecha(inout r: Robot)
-proc coordActual(in r: Robot) : in c: Coord
-proc m\'asDerecha(in r: Robot) : Z
-proc cuantasVecesPaso(in r: Robot, in c: Coord) : Z
-\}
+Coord es struct {x :Z, y :Z}\\
+TAD Robot \{ \\
+proc ubicarse(inout r: Robot, in c: Coord) \\
+proc arriba(inout r: Robot) \\
+proc abajo(inout r: Robot) \\
+proc izquierda(inout r: Robot) \\
+proc derecha(inout r: Robot) \\
+proc coordActual(in r: Robot) : in c: Coord \\
+proc m\'asDerecha(in r: Robot) : Z \\
+proc cuantasVecesPaso(in r: Robot, in c: Coord) : Z \\
+\}\\
+\newpage
+\textbf{Soluci\'on:}
+\begin{tad}{Robot}
+    obs posicionActual: Coord
+    obs coordenadasVisitadas: seq$\langle$Coord$\rangle$
+
+    \begin{proc}{nuevoRobotEn}{in c: coords}{Robot}
+        \requiere{True}
+        \asegura{res.posicionActual = c \land |res.coordenadasVisitadas| = 0}
+    \end{proc}
+    
+    \begin{proc}{ubicarse}{\Inout r: Robot, \In c: Coord}{}
+        \requiere{r = r0}
+        \asegura{r.posicionActual = c \land \\ coordenadaAnteriorGuardada(r, r0)}
+    \end{proc}
+
+    \begin{proc}{arriba}{\Inout r: Robot}{}
+        \requiere{r = r0}
+        \asegura{r.posicionActual.x = r0.posicionActual.x \land r.posicionActual.y = r0.posicionActual.y + 1  \land \\ coordenadaAnteriorGuardada(r, r0)}
+    \end{proc}
+
+    \begin{proc}{abajo}{\Inout r: Robot}{}
+        \requiere{r = r0}
+        \asegura{r.posicionActual.x = r0.posicionActual.x \land r.posicionActual.y = r0.posicionActual.y - 1  \land \\ coordenadaAnteriorGuardada(r, r0)}
+    \end{proc}
+
+    \begin{proc}{izquierda}{\Inout r: Robot}{}
+        \requiere{r = r0}
+        \asegura{r.posicionActual.x = r0.posicionActual.x - 1 \land r.posicionActual.y = r0.posicionActual.y  \land \\ coordenadaAnteriorGuardada(r, r0)}
+    \end{proc}
+    
+    \begin{proc}{derecha}{\Inout r: Robot}{}
+        \requiere{r = r0}
+        \asegura{r.posicionActual.x = r0.posicionActual.x + 1 \land r.posicionActual.y = r0.posicionActual.y  \land \\ coordenadaAnteriorGuardada(r, r0)}
+    \end{proc}
+
+    \begin{proc}{coordActual}{\In r: Robot}{Coord}
+        \requiere{True}
+        \asegura{res = r.posicionActual}
+    \end{proc}
+
+    \begin{proc}{masDerecha}{\In r: Robot}{Coord}
+        \requiere{True}
+        \asegura{\existe[unalinea]{i}{\ent}{
+            (0 \leq i < |r.coordenadasVisitadas|) \land \\
+            \paraTodo[unalinea]{j}{\ent}{(0 \leq j < |r.coordenadasVisitadas|) \land \\
+            (r.coordenadasVisitadas[i].x \geq r.coordenadasVisitadas[j].x)} \land \\
+            (r.coordenadasVisitadas[i].x \geq r.posicionActual.x) \implicaLuego \\
+            (res = r.coordenadasVisitadas[i] )}}
+    \end{proc}
+
+    \begin{proc}{cuantasVecesPaso}{\In r: Robot, \In c: Coord}{\ent}
+        \requiere{True}
+        \asegura{res = \sum_{i=0}^{|r.coordenadasVisitadas|} \IfThenElse{            r.coordenadasVisitadas[i] = c}{1}{0}}
+    \end{proc}
+
+    \pred{coordenadaAnteriorGuardada}{r,r0}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |r0.coordenadasVisitadas|) \implicaLuego \\ 
+    (r.coordenadasVisitadas[i] = r0.coordenadasVisitadas[i] \land \\
+     r.coordenadasVisitadas[|r0.coordenadasVisitadas|] = r0.posicionActual)}}
+\end{tad}
+
 \textbf{Ejercicio 10.} Queremos modelar el funcionamiento de un vivero. El vivero arranca su actividad sin ninguna planta y con
 un monto inicial de dinero.
 Las plantas las compramos en un mayorista que nos vende la cantidad que deseemos pero solamente de a una especie
