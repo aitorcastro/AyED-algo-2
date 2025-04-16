@@ -464,9 +464,69 @@ un monto inicial de dinero. Las plantas las compramos en un mayorista que nos ve
     \item[a)] Indique las operaciones (procs) del TAD con todos sus par\'ametros.
     \item[b)] Describa el TAD en forma completa, indicando sus observadores, los requiere y asegura de las operaciones. Puede agregar
     los predicados y funciones auxiliares que necesite, con su correspondiente definici\'on
-    \item[c)] ¿qu\'e cambiar\'ia si supi\'eramos a priori que cada vez que compramos en el mayorista pagamos exactamente el 10 % m\'as
+    \item[c)] ¿qu\'e cambiar\'ia si supi\'eramos a priori que cada vez que compramos en el mayorista pagamos exactamente el 10 \% m\'as
     que la vez anterior? Describa los cambios en palabras.
 \end{itemize}
+
+dinero Es \ent\\
+\indent planta Es string
+\begin{tad}{Vivero}
+    obs caja: dinero \\
+    obs stock: dict$\langle$planta, struct$\langle$cant: \ent, precio: dinero$\rangle$$\rangle$
+
+    \begin{proc}{abrirVivero}{\In montoInicial: dinero}{Vivero}
+        \requiere{True}
+        \asegura{res.caja = montoInicial \land |res.stock| = 0}
+    \end{proc}
+
+    \begin{proc}{comprarPlanta}{\Inout v: Vivero, \In p: planta, \In precio: dinero, \In cantidad: \ent}{}
+        \requiere{v = v0}
+        \requiere{v0.caja \geq precio * cantidad \land cantidad > 0 \land precio > 0}
+        \asegura{v.caja = v0.caja - precio * cantidad}
+        \asegura{p \in v0.stock \implicaLuego  v.stock = (setKey v0.stock, p, struct\langle cant: v0.stock[p] + cantidad, precio: precio \rangle) }
+        \asegura{p \notin v0.stock \implicaLuego  v.stock = setKey (v0.stock, p, struct\langle cant: cantidad, precio: precio \rangle)}
+    \end{proc}
+
+    \begin{proc}{ponerPrecio}{\Inout v: Vivero, \In p: planta, \In precio: dinero}{}
+        \requiere{v = v0}
+        \requiere{v0.stock[p].cant > 0 \land precio > 0}
+        \asegura{v.stock = setKey (v0.stock, p, struct\langle cant: v0.stock[p].cant, precio: precio \rangle)}
+        \asegura{v.caja = v0.caja}        
+    \end{proc}
+    
+    \begin{proc}{venderPlanta}{\Inout v: Vivero, \In p: planta}{}
+        \requiere{v = v0}
+        \requiere{v0.stock[p].cant > 0 \land cantidad > 0}
+        \asegura{v.caja = v0.caja + v0.stock[p].precio}
+        \asegura{v.stock = setKey (v0.stock, p, struct\langle cant: v0.stock[p].cant - 1, precio: v0.stock[p].precio \rangle)}
+    \end{proc}
+
+    \begin{proc}{accederBalance}{\In v: Vivero}{\ent}
+        \requiere{True}
+        \asegura{res = v.caja}
+    \end{proc}
+
+\end{tad}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \textbf{Ejercicio 11.} Se desea modelar mediante un TAD un videojuego de guerra desde el punto de vista de un \'unico jugador.
 En el videojuego es posible ir a las tabernas y contratar mercenarios. Al contratarlo se nos informa el indicador de poder
 que tiene y el costo que tienen sus servicios. El poder de un mercenario siempre es positivo, sino nadie querr\'ia contratarlo.
