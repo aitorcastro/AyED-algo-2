@@ -508,25 +508,6 @@ dinero Es \ent\\
 
 \end{tad}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \textbf{Ejercicio 11.} Se desea modelar mediante un TAD un videojuego de guerra desde el punto de vista de un \'unico jugador.
 En el videojuego es posible ir a las tabernas y contratar mercenarios. Al contratarlo se nos informa el indicador de poder
 que tiene y el costo que tienen sus servicios. El poder de un mercenario siempre es positivo, sino nadie querr\'ia contratarlo.
@@ -546,6 +527,70 @@ Se pide:
     \item[b)] Describa el TAD en forma completa, indicando sus observadores, los requiere y asegura de las operaciones. Puede agregar
     los predicados y funciones auxiliares que necesite, con su correspondiente definici\'on
 \end{itemize}
+
+dinero ES \ent \\
+\indent id ES \ent 
+\indent poder ES \ent
+
+\begin{tad}{videojuego}
+    obs plata: dinero \\
+    obs territorios: seq$\langle$\ent$\rangle$ \\
+    obs batallones: dict$\langle$id, poder $\rangle$ 
+
+    \begin{proc}{nuevoJuego}{\In dineroInicial: \ent}{videojuego}
+        \requiere{True}
+        \asegura{res.plata = dineroInicial \land |res.territorios| = 1 \land |res.batallones| = 0}    
+    \end{proc}
+
+    \begin{proc}{contratarMercenario}{\Inout j: videojuego, \In poder: \ent, \In costo: dinero, \In batallon: id}{}
+        \requiere{j = j0 \land poder > 0 \land costo > 0}
+        \requiere{j.saldo \geq costo}
+        \asegura{j.plata = j0.plata - costo}
+        \asegura{batallon \in batallones \implicaLuego \\ j.batallones = setKey (j0.batallones, batallon, poder + j0.batallones[batallon])}
+        \asegura{batallon \notin batallones \implicaLuego j.batallones = setKey (j0.batallones, batallon, poder)}
+    \end{proc}
+
+    \begin{proc}{atacarTerritorio}{\Inout j: videojuego, \In batallon: id, \In poderEnemigo: \ent}{}
+        \requiere {j = j0 \land poderEnemigo > 0 \land batallon \in j.batallones}
+        \requiere{j.plata \geq 500 \land |j.batallones| > 0}
+        \asegura{j.batallones[batallon] \leq poderEnemigo \implicaLuego \\ j.plata = j0.plata - 500}
+        \asegura{j.batallones[batallon] > poderEnemigo \implicaLuego \\ j.plata = j0.plata + 1000 \land j.territorios = j0.territorios + 1}
+    \end{proc}
+
+    \begin{proc}{dineroDisponible}{\Inout j: videojuego}{\ent}
+        \requiere{True}
+        \asegura{res = j.plata}
+    \end{proc}
+
+    \begin{proc}{territoriosDominados}{\Inout j: videojuego}{\ent}
+        \requiere{True}
+        \asegura{res = |j.territorios|}
+    \end{proc} 
+
+\end{tad}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \textbf{Ejercicio 12.} Se quiere organizar un viaje de estudios entre un grupo de estudiantes. Al definir el viaje se sabe qu\'e personas
 viajan y los costos de los pasajes, as\'i como el costo del combustible para un auto. Como el costo de pasajes es m\'as alto que
 el del combustible, se quiere que todos viajen en auto, pero inicialmente no se sabe de cu\'antos se dispondr\'a.
