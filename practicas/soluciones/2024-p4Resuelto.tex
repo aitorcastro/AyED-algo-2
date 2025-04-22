@@ -1,0 +1,122 @@
+\documentclass{article}
+\input{AEDmacros}
+\usepackage{titling}
+\usepackage{tikz}
+
+%Environment para tad
+%///////////////////////////
+\newenvironment{tad}[1]{
+	\paragraph{} \vspace*{-4mm}
+	\newcommand{\obs}[2]{\texttt{obs} ##1 : ##2}
+
+	\vspace{1ex}
+	\texttt{TAD} \textit{#1} $\{$
+	\par
+	\tocarEspacios
+}
+{
+
+\hspace{2.5mm} $\}$
+\vspace{2ex}
+}
+%///////////////////////////
+
+\title{Soluci\'on practica 4 Algoritmos y Estructuras de Datos}
+\author{Aitor}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\textbf{Ejercicio 1.}
+Ya que $a$ y $b$ son reales y $i$ es entero, podemos decir que $\operatorname{def}(a) \equiv \operatorname{def}(b) \equiv \operatorname{def}(i) \equiv \text{True}$. Teniendo esto en cuenta:
+\begin{itemize}
+	\item [a)] $\operatorname{def}(a + b) \equiv \operatorname{def}(a) \land \operatorname{def}(1) \equiv \operatorname{def}(a) \land \text{True} \equiv \operatorname{def}(a) \equiv \text{True}$.
+	\item [b)] $\operatorname{def}(a / b) \equiv \operatorname{def}(a) \land \operatorname{def}(b) \land (b \neq 0) \equiv \text{True} \land \text{True} \land (b \neq 0) \equiv (b \neq 0)$.
+	\item [c)] $\operatorname{def}(\sqrt{a / b}) \equiv \operatorname{def}(a) \land \operatorname{def}(b) \land (b \neq 0) \land ((a \geq 0 \land b > 0) \lor (a \leq 0 \land b < 0)) \equiv \text{True} \land \text{True} \land (b \neq 0) \land ((a \geq 0 \land b > 0) \lor (a < 0 \land b < 0))$.
+\end{itemize}
+
+Recuerdo los axiomas vistos en clase:
+\begin{enumerate}
+	\item Axioma 1: $wp(x := E, Q) \equiv def(E) \yLuego Q^x_E$ es decir la wp(S,Q) donde S es equivalente a la conjuncion entre E(lo que se esta asignando) y reemplazar en Q, x por E.
+	\item Axioma 2: $wp(skip, Q) \equiv Q$
+	\item Axioma 3: $wp(S1 ; S2, Q) \equiv wp(S1, wp(S2, Q))$
+	\item Axioma 4: Si S = if B then S1 else S2 endif entonces $wp(S,Q) \equiv def(B) \land _L \ ((B \land wp(S1,Q)) \lor (\lnot B \land wp(S2, Q)))$
+\end{enumerate}
+
+\textbf{Ejercicio 2.}\\
+\begin{itemize}
+	\item [a)] $wp(a: = a + 1; b:= a/2,  b \geq 0)$\\
+	\textbf{Soluci\'on:}
+	por axioma 3: $wp(a := a+1; b := a/2, b \geq 0) = wp(a := a+1, wp(b := a/2, b \geq 0))$\\
+	por axioma 1: $wp(b := a/2, b \geq 0) \equiv \operatorname{def}(a/2) \yLuego Q^{b}_{a/2}$ (con $Q = b \geq 0$)\\
+	y def(a/2) $\equiv def(a) \land def(2) \equiv \True \land \True \equiv \True$\\
+	y $Q^{b}_{a/2} \equiv a/2 \geq 0 \iff a \geq 0$ luego $\operatorname{def}(a/2) \yLuego Q^{b}_{a/2} \equiv \True \land a\geq 0 \equiv a \geq 0$\\
+	luego tenemos que $wp(b := a/2, b \geq 0) \equiv a \geq 0$\\
+	ahora sustituyendo en la ecuacion anterior tenemos que $wp(a := a+1, wp(b := a/2, b \geq 0)) \equiv wp(a := a+1, a \geq 0)$\\
+	por axioma 1: $wp(a := a+1, a \geq 0) \equiv def(a+1) \yLuego Q^{a}_{a+1} \equiv \True \yLuego a+1 \geq 0 \equiv a+1 \geq 0 \equiv a \geq -1$\\
+	\textbf{Conclusi\'on} $wp(a := a+1; b := a/2, b \geq 0) \equiv a \geq -1$\\
+
+	\item [b)]$wp(a := A[i] + 1; b := a*a, b \neq 2)$.\\
+	\textbf{Soluci\'on:}
+	por axioma 3: $wp(a := A[i] + 1; b := a*a, b \neq 2) \equiv wp(a := A[i] + 1, wp(b := a*a, b \neq 2))$\\
+	por axioma 1: $wp(b := a*a, b \neq 2) \equiv def(a*a) \yLuego Q^{b}_{a*a}$ (con $Q = b \neq 2$)\\
+	y def(a*a) $\equiv def(a) \land def(a) \equiv \True \land \True \equiv \True$\\
+	y $Q^{b}_{a*a} \equiv a*a \neq 2 \equiv a \neq \sqrt{2}$ luego $def(a*a) \yLuego Q^{b}_{a*a} \equiv \True \land a \neq \sqrt{2} \equiv a \neq \sqrt{2}$\\
+	luego tenemos que $wp(b := a*a, b \neq 2) \equiv a \neq \sqrt{2}$\\
+	ahora sustituyendo en la ecuacion anterior tenemos que $wp(a := A[i] + 1, wp(b := a*a, b \neq 2)) \equiv wp(a := A[i] + 1, a \neq \sqrt{2})$\\
+	por axioma 1: $wp(a := A[i] + 1, a \neq \sqrt{2}) \equiv
+	def(A[i] + 1) \yLuego Q^{a}_{A[i] + 1} \equiv 
+	def(A[i]) \yLuego Q^{a}_{A[i] + 1} \equiv \\
+	(def(A) \land def(i) \yLuego 0 \leq i < |A|) \yLuego A[i] + 1 \neq \sqrt{2} 
+	\equiv (0 \leq i < |A|) \yLuego A[i] \neq \sqrt{2} - 1$\\
+	\textbf{Conclusi\'on} $wp(a := A[i] + 1; b := a*a, b \neq 2) \equiv (0 \leq i < |A|) \yLuego A[i] \neq \sqrt{2} - 1$\\
+	
+	\item [c)] $wp(a := A[i] + 1; a := b*b, a \geq 0)$.\\
+	\textbf{Soluci\'on:}
+	por axioma 3: $wp(a := A[i] + 1; a := b*b, a \geq 0) \equiv wp(a := A[i] + 1, wp(a := b*b, a \geq 0))$\\
+	por axioma 1: $wp(a := b*b, a \geq 0) \equiv def(b*b) \yLuego Q^{a}_{b*b}$ (con $Q = a \geq 0$)\\
+	y def(b*b) $\equiv def(b) \land def(b) \equiv \True \land \True \equiv \True$\\
+	y $Q^{a}_{b*b} \equiv b*b \geq 0 \equiv True$ (ya que un numero multiplicado por si mismo siempre es mayor o igual a 0)\\
+	luego $def(b*b) \yLuego Q^{a}_{b*b} \equiv \True \land \True \equiv \True$\\
+	luego tenemos que $wp(a := b*b, a \geq 0) \equiv \True$\\
+	ahora sustituyendo en la ecuacion anterior tenemos que $wp(a := A[i] + 1, wp(a := b*b, a \geq 0)) \equiv wp(a := A[i] + 1, \True)$ \textcolor{red}{???? como hago con ese true}\\
+
+	\item [d)] $wp(a := a-b; b := a+b, a \geq 0 \land b \geq 0)$.\\
+	\textbf{Soluci\'on:}
+	por axioma 3: $wp(a := a-b; b := a+b, a \geq 0 \land b \geq 0) \equiv wp(a := a-b, wp(b := a+b, a \geq 0 \land b \geq 0))$\\
+	por axioma 1: $wp(b := a+b, a \geq 0 \land b \geq 0) \equiv def(a+b) \yLuego Q^{b}_{a+b}$ (con $Q = a \geq 0 \land b \geq 0$) \textcolor{red}{??? como hago si tengo a y b, reemplazo  a o reemplazo  b?}\\
+\end{itemize}
+
+\textbf{Ejercicio 4.} Para los siguientes pares de programas S y postcondiciones Q
+\begin{itemize}
+	\item Escribir la precondici\'on m\'as d\'ebil P = wp(S, Q)
+	\item Mostrar formalmente que la P elegida es correcta.
+\end{itemize}
+Hay que usar el axioma 4: Si S = if B then S1 else S2 endif entonces $wp(S,Q) \equiv def(B) \yLuego ((B \land wp(S1,Q)) \lor (\lnot B \land wp(S2, Q)))$
+
+\textbf{Soluci\'on:}
+\begin{enumerate}
+	\item [a)] $B = a < 0$, $S1 = b := a$, $S2 = b := -a$, $Q \equiv (b = -|a|)$\\
+	por axioma 4: $wp(S,Q) \equiv def(a < 0) \yLuego ((a < 0 \land wp(b := a, b = -|a|)) \lor (\lnot (a < 0) \land wp(b := -a, b = -|a|)))$\\
+	$wp(b := a, b = -|a|) \equiv def(a) \yLuego Q^{b}_{a} \equiv \True \yLuego a = -|a| \equiv a = -|a|$ es decir a es negativo\\
+	$wp(b := -a, b = -|a|) \equiv def(-a) \yLuego Q^{b}_{-a} \equiv \True \yLuego -a = -|a| \equiv -a = -|a| \equiv a = |a|$ es decir a es positivo\\
+	luego tenemos que $wp(S,Q) \equiv def(a < 0) \yLuego ((a < 0 \land a = -|a|) \lor (\lnot (a < 0) \land a = |a|)) \equiv$\\
+	$\True \yLuego ((a < 0 \land a = -|a|) \lor (\lnot (a < 0) \land a = |a|))
+	\equiv ((a < 0 \land a = -|a|) \lor (\lnot (a < 0) \land a = |a|))$\\
+	analicemos las dos partes de la disyuncion:
+	\begin{itemize}
+		\item [1)] $a < 0 \land a = -|a|$\\
+		$a = -|a|$ esta diciendo que a es negativo, es decir $a<0$ pero el 0 lo cumple luego $a \leq 0$ reformulando tenemos que: $a < 0 \land a = -|a| \equiv a < 0 \land a \leq 0$ pero basta con decir $a < 0$ ya que si a = 0, a < 0 es falsa luego con chequear a < 0 estamos viendo todas las opciones
+		\item [2)] $\lnot (a < 0) \land a = |a|$\\
+		igual que en el item anterior $\lnot (a < 0)$ esta diciendo $a \geq 0$ y $a = |a|$ dice a es positivo o cero, luego tenemos que $ \lnot (a < 0) \land a = |a| \equiv a \geq 0 \land a \geq 0 \equiv a \geq 0$
+	\end{itemize}
+	entonces $((a < 0 \land a = -|a|) \lor (\lnot (a < 0) \land a = |a|)) \equiv a < 0 \lor a \geq 0$ que se cumple siempre entonces es $\equiv \True$\\
+	recapitulando tenemos que: $wp(S,Q) \equiv def(a < 0) \yLuego ((a < 0 \land wp(b := a, b = -|a|)) \lor (\lnot (a < 0) \land wp(b := -a, b = -|a|))) \equiv \\
+	\True \yLuego \True \equiv \True$
+
+\end{enumerate}
+
+
+\end{document}
