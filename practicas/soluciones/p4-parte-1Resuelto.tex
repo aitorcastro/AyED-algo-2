@@ -116,10 +116,35 @@ Hay que usar el axioma 4: Si S = if B then S1 else S2 endif entonces $wp(S,Q) \e
 	recapitulando tenemos que: $wp(S,Q) \equiv def(a < 0) \yLuego ((a < 0 \land wp(b := a, b = -|a|)) \lor (\lnot (a < 0) \land wp(b := -a, b = -|a|))) \equiv \\
 	\True \yLuego \True \equiv \True$
 
-	\item [b)] $B = i > 0$, $S1 = s[i] := 0$, $S2 = s[0] = 0$, $Q \equiv \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \yLuego s[j] \geq 0}$
-	\textbf{Soluci\'on:}
+	\item [b)] $B = a < 0$, $S1 = b := a$, $S2 = b := -a$, $Q \equiv (b = |a|)$\\
+	por axioma 4: $wp(S,Q) \equiv def(a < 0) \yLuego ((a < 0 \land wp(b := a, b = |a|)) \lor (\lnot (a < 0) \land wp(b := -a, b = |a|)))$\\
+	por axioma 1: $wp(b := a, b = |a|) \equiv def(a) \yLuego Q^{b}_{a} \equiv \True \yLuego a = |a| \equiv a = |a| \equiv a \geq 0$\\
+	igualmente con s2, por axioma 1: $wp(b := -a, b = |a|) \equiv def(-a) \yLuego Q^{b}_{-a} \equiv \True \yLuego -a = |a| \equiv -a = |a| \equiv a \leq 0$\\
+	uniendo todo tenemos que: $wp(S,Q) \equiv def(a < 0) \yLuego ((a < 0 \land a \geq 0) \lor (\lnot (a < 0) \land a \leq 0))$\\
+	y pasa lo contrario que en el item a, ahora tenemos que $(a < 0 \land a \geq 0)$ que nunca se cumple y $(\lnot (a < 0) \land a \leq 0)$ que tampoco se cumple.\\
+	luego tenemos que $wp(S,Q) \equiv def(a < 0) \yLuego ((a < 0 \land a \geq 0) \lor (\lnot (a < 0) \land a \leq 0)) \equiv def(a < 0) \yLuego \False$\\
+	$\equiv \True \yLuego \False \equiv \False$\\
 
+	\item [c)] $B = i > 0$, $S1 = s[i] := 0$, $S2 = s[0] = 0$, $Q \equiv \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \yLuego s[j] \geq 0}$
 \end{enumerate}
+
+\textbf{Ejercicio 5.}Para las siguientes especificaciones:
+\begin{itemize}
+	\item Poner nombre al problema que resuelven
+	\item Escribir un programa S sencillo en SmallLang, sin ciclos, que lo resuelva
+	\item Dar la precondici\'on m\'as d\'ebil del programa escrito con respecto a la postcondici\'on de su especificaci\'on
+\end{itemize}
+\textbf{Soluci\'on:}
+\begin{itemize}
+	\item [a)]
+	\begin{lstlisting}
+		func sumarI-esismo(s <int>, i int, a int) int {
+			a := a + s[i];
+			return a
+		}
+	\end{lstlisting}
+\end{itemize}
+
 
 
 \end{document}
