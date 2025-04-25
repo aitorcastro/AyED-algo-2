@@ -150,7 +150,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         }
         
         public boolean hayAnterior() {
-	        //throw new UnsupportedOperationException("No implementada aun");
+	        //throw ew UnsupportedOperationException("No implementada aun");
             return anterior != null;
         }
 
