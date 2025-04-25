@@ -90,45 +90,95 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     public void modificarPosicion(int indice, T elem) {
-        throw new UnsupportedOperationException("No implementada aun");
+        //throw new UnsupportedOperationException("No implementada aun");
+        Nodo actual = primero;
+        for (int j = 0; j < indice; j++) {
+            actual = actual.siguiente;
+        }
+        actual.dato = elem;
     }
 
     public ListaEnlazada<T> copiar() {
-        throw new UnsupportedOperationException("No implementada aun");
+        //throw new UnsupportedOperationException("No implementada aun");
+        ListaEnlazada<T> copia = new ListaEnlazada<>();
+        Nodo actual = primero;
+        while (actual != null) {
+            copia.agregarAtras(actual.dato);
+            actual = actual.siguiente;
+        }
+        return copia;
     }
 
     public ListaEnlazada(ListaEnlazada<T> lista) {
-        throw new UnsupportedOperationException("No implementada aun");
+        //throw new UnsupportedOperationException("No implementada aun");
+        primero = null;
+        ultimo = null;
+        longitud = 0;
+        
+        Nodo actual = lista.primero;
+        while (actual != null) {
+            agregarAtras(actual.dato);
+            actual = actual.siguiente;
+        }
     }
     
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("No implementada aun");
+        //throw new UnsupportedOperationException("No implementada aun");
+        String listaString = "[";
+        Nodo actual = primero;
+        while(actual != null) {
+            listaString += actual.dato;
+            if(actual.siguiente != null) {
+                listaString += ", ";
+            }
+            actual = actual.siguiente;
+        }
+        listaString += "]";
+        return listaString;
     }
 
     private class ListaIterador implements Iterador<T> {
     	// Completar atributos privados
+        private Nodo anterior;
+        private Nodo siguiente;
+
+        public ListaIterador() {
+            anterior = null;
+            siguiente = primero;
+        }            
 
         public boolean haySiguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        //throw new UnsupportedOperationException("No implementada aun");
+            return siguiente != null;
         }
         
         public boolean hayAnterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        //throw new UnsupportedOperationException("No implementada aun");
+            return anterior != null;
         }
 
         public T siguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        //throw new UnsupportedOperationException("No implementada aun");
+            T dato = siguiente.dato;
+            anterior = siguiente;
+            siguiente = siguiente.siguiente;
+            return dato;            
         }
         
 
         public T anterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        //throw new UnsupportedOperationException("No implementada aun");
+            T dato = anterior.dato;
+            siguiente = anterior;
+            anterior = anterior.anterior;
+            return dato;
         }
     }
 
     public Iterador<T> iterador() {
-	    throw new UnsupportedOperationException("No implementada aun");
+	    //throw new UnsupportedOperationException("No implementada aun");
+        return new ListaIterador();
     }
 
 }
