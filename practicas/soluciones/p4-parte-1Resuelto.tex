@@ -2,6 +2,7 @@
 \input{AEDmacros}
 \usepackage{titling}
 \usepackage{tikz}
+\usepackage{amsthm}
 
 %Environment para tad
 %///////////////////////////
@@ -160,5 +161,79 @@ Hay que usar el axioma 4: Si S = if B then S1 else S2 endif entonces $wp(S,Q) \e
 	endif
 \end{lstlisting}
 a) Demostrar que las siguientes WPs son incorrectas dando un contraejemplo:\\
+
+\textbf{Ejercicio 7.}Dado el siguiente condicional determinar la precondici\'on m\'as d\'ebil que permite hacer valer la poscondici\'on (Q)
+propuesta. Se pide:
+\begin{itemize}
+	\item Describir en palabras la WP esperada
+	\item Derivarla formalmente a partir de los axiomas de precondici\'on m\'as d\'ebil. Para obtener el puntaje m\'aximo deber\'a simpli-
+	ficarla lo m\'as posible.
+\end{itemize}
+a)$Q \equiv {\paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \yLuego s[j] > 0}}$
+\begin{lstlisting}
+	if s[i] < 0 then
+		s[i] := -s[i]
+	else
+		s[i] := 0;
+	end
+\end{lstlisting}
+Axioma 1: $wp(x := E, Q) \equiv def(E) \yLuego Q^x_E$ es decir la wp(S,Q) donde S es equivalente a la conjuncion entre E(lo que se esta asignando) y reemplazar en Q, x por E.\\
+\textbf{Soluci\'on:}Traduciendo un poco Q dice que todos los elementos del arreglo son mayores a 0, es decir $s[j] > 0$ para todo j. Luego la wp seria:
+\begin{itemize}
+	\item i esta en rango asi S no se indefine
+	\item el i-\'esimo valor deveria ser negativo, asi queda un numero mayor a 0 ya que si el numero es 0 o positivo, queda un 0 que no cumle Q
+\end{itemize}
+Ahora formalmente:\\
+Hay que usar el axioma 4: Si S = if B then S1 else S2 endif entonces $wp(S,Q) \equiv def(B) \yLuego ((B \land wp(S1,Q)) \lor (\lnot B \land wp(S2, Q)))$
+
+\begin{itemize}
+	\item $B = s[i] < 0$
+	\item $S1 = s[i] := -s[i]$
+	\item $s2 = s[i] := 0$
+	\item $Q \equiv {\paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \yLuego s[j] > 0}}$
+	\item $wp(S1,Q) \equiv wp(s[i] := -s[i], Q) \equiv wp(s := setAt(s,i,-s[i]), Q)$
+	\item $wp(S2,Q) \equiv wp(s[i] := 0, Q) \equiv wp(s := setAt(s,i,0), Q)$
+\end{itemize}
+Ahora tenemos que por axioma 4:\\
+\indent$wp(S,Q) \equiv def(B) \yLuego ((B \land wp(S1,Q)) \lor (\lnot B \land wp(S2, Q)))$\\
+
+$\equiv def(s[i] < 0) \yLuego ((s[i] < 0 \land wp(s := setAt(s,i,-s[i]), Q)) \lor (\lnot (s[i] < 0) \land wp(s := setAt(s,i,0), Q)))$\\
+
+$\equiv def(s) \land def(i) \land 0 \leq i < |s| \yLuego\\
+((s[i] < 0 \land wp(s := setAt(s,i,-s[i]), Q)) \lor (\lnot (s[i] < 0) \land wp(s := setAt(s,i,0), Q)))$\\
+
+$\equiv_{ax1} (def(s) \land def(i)) \land 0 \leq i < |s| \yLuego \\
+((s[i] < 0 \land def(setAt(s,i,-s[i])) \yLuego Q^{s}_{setAt(s,i,-s[i])}) \lor\\
+(\lnot (s[i] < 0) \land def(setAt(s,i,0)) \yLuego Q^{s}_{setAt(s,i,0)}))$\\
+
+$\equiv (True \land True) 0 \leq i < |s| \yLuego \\
+((s[i] < 0 \yLuego def(s) \land def(i) \land 0 \leq i < |s| \yLuego Q^{s}_{setAt(s,i,-s[i])}) \lor\\
+(\lnot (s[i] < 0) \land def(s) \land def(i) \land 0 \leq i < |s| \yLuego Q^{s}_{setAt(s,i,0)}))$\\
+
+$\equiv 0 \leq i < |s| \yLuego \\
+((s[i] < 0 \yLuego Q^{s}_{setAt(s,i,-s[i])}) \lor\\
+(\lnot (s[i] < 0) \yLuego Q^{s}_{setAt(s,i,0)}))$\\
+
+$\equiv 0 \leq i < |s| \yLuego \\
+((s[i] < 0 \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \implicaLuego setAt(s,i,-s[i])[j] > 0}) \lor\\
+(\lnot (s[i] < 0) \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \implicaLuego setAt(s,i,0)[j] > 0}))$\\
+
+$\equiv 0 \leq i < |s| \yLuego \\
+((s[i] < 0 \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \land j \neq i \implicaLuego s[j] > 0}) \land setAt(s, i, -s[i])[i] > 0 \lor\\
+(\lnot (s[i] < 0) \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \land j \neq i \implicaLuego s[j] > 0})) \land setAt(s, i, 0)[i] > 0$\\
+
+$\equiv 0 \leq i < |s| \yLuego \\
+((s[i] < 0 \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \land j \neq i \implicaLuego s[j] > 0}) \land -s[i] > 0 \lor\\
+(\lnot (s[i] < 0) \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \land j \neq i \implicaLuego s[j] > 0})) \land 0 > 0$\\
+
+$\equiv 0 \leq i < |s| \yLuego \\
+((s[i] < 0 \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \land j \neq i \implicaLuego s[j] > 0}) \land \textcolor{blue}{True} \lor\\
+(\lnot (s[i] < 0) \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \land j \neq i \implicaLuego s[j] > 0})) \land \textcolor{red}{False}$\\
+
+$\equiv 0 \leq i < |s| \yLuego \\
+((s[i] < 0 \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \land j \neq i \implicaLuego s[j] > 0}))$\\
+\qedsymbol
+
+
 
 \end{document}
