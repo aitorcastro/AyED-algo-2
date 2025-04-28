@@ -234,6 +234,31 @@ $\equiv 0 \leq i < |s| \yLuego \\
 ((s[i] < 0 \yLuego \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \land j \neq i \implicaLuego s[j] > 0}))$\\
 \qedsymbol
 
+b) por axioma 4: $wp(S,Q) \equiv def(B) \yLuego ((B \land wp(S1,Q)) \lor (\lnot B \land wp(S2, Q)))$
+\begin{itemize}
+	\item $Q \equiv \existe[unalinea]{j}{\ent}{j \geq 0 \land j^2 = a}$ es decir existe un j tal que j es mayor o igual a 0 y j al cuadrado es igual a $a$
+	\item $B \equiv a mod 2 = 0$ es decir a es par
+	\item $S1 \equiv a := a * a$ es decir se reemplaza $a$ por $a^2$
+	\item $S2 \equiv a := -|a|$ es decir si $a$ es negativo queda igual y si $a$ es positivo se reemplaza por $-a$ 
+\end{itemize}
+
+$wp(S1,Q) \equiv wp(a := a * a, Q) \equiv_{ax(1)} def(a * a) \yLuego Q^a_{a * a}\\
+\equiv def(a) \yLuego \existe[unalinea]{j}{\ent}{j \geq 0 \land j^2 = a * a}\\
+\equiv \True \yLuego \existe[unalinea]{j}{\ent}{j \geq 0 \land j^2 = a * a}\\
+\equiv \existe[unalinea]{j}{\ent}{j \geq 0 \land j^2 = a * a}$\\
+esto es True por que si $j = a$ entonces $j^2 = a^2$
+
+$wp(S2,Q) \equiv wp(a := -|a|, Q) \equiv_{ax(1)} def(-|a|) \yLuego Q^{a}_{-|a|}\\
+\equiv def(a) \yLuego \existe[unalinea]{j}{\ent}{j \geq 0 \land j^2 = -|a|}\\
+\equiv \True \yLuego \existe[unalinea]{j}{\ent}{j \geq 0 \land j^2 = -|a|}$\\
+esto es False por que no existe un j tal que $j^2 = -|a|$ ya que el cuadrado de un numero es positivo y -|a| es negativo\\
+
+juntando todo tenemos que:
+$wp(S,Q) \equiv def(a) \yLuego ((a mod 2 = 0 \land wp(a := a * a, Q)) \lor (\lnot (a mod 2 = 0) \land wp(a := -|a|, Q)))\\
+\equiv True \yLuego ((a mod 2 = 0 \land True) \lor (\lnot (a mod 2 = 0) \land False))$ \ \ \ \ (sigue)\\
+$\equiv ((a mod 2 = 0 \land True) \lor False)\\
+\equiv a mod 2 = 0 \land True\\
+\equiv a mod 2 = 0$\\
 
 
 \end{document}
