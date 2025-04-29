@@ -1,0 +1,81 @@
+\documentclass{article}
+\input{AEDmacros}
+\usepackage{titling}
+\usepackage{tikz}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+%Environment para tad
+%///////////////////////////
+\newenvironment{tad}[1]{
+	\paragraph{} \vspace*{-4mm}
+	\newcommand{\obs}[2]{\texttt{obs} ##1 : ##2}
+
+	\vspace{1ex}
+	\texttt{TAD} \textit{#1} $\{$
+	\par
+	\tocarEspacios
+}
+{
+
+\hspace{2.5mm} $\}$
+\vspace{2ex}
+}
+%///////////////////////////
+
+\title{Soluci\'on practica 4 parte 2 Algoritmos y Estructuras de Datos}
+\author{Aitor}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\textbf{Ejercicio 1.}
+\begin{itemize}
+    \item [a)] Precondici\'on: $P_c \equiv \{res = 0 \land i = 0\}$
+    Postcondici\'on: $Q_c \equiv \{res = \sum_{j=0}^{|s|-1} s[j] \land i = |s|\}$
+    \item [b)] Falla porque al terminarse de ejecutar el ciclo, $i = |s|$ y si en el invariante se sustituye $0 \leq i \leq |s|$ por $0 \leq i < |s|$ el invariante no se cumple en la postcondicion y luego no es un invariante valido. Osea falla el punto $I \land \lnot B \implies Q_c$, ya que tendriamos $0 \leq i < |s|$ (por el invariante) y $i = |s|$ (por B) lo que nunca se puede cumplir.
+    \item [c)] Falla por que al final voy a estar accediendo a un elemento que no esta.
+    \item [d)] Falla $\{I \land B\}S\{I\}$ por que al terminar una iteracion res va a ser $res + s[i+1]$ envez de $res + s[i]$. 
+    
+    \item [e)] Demostraci\'on de correcci\'on parcial:\\
+    $P_C \equiv \{res = 0 \land i = 0\}$\\
+    $Q_c \equiv \{res = \sum_{j=0}^{|s|-1} s[j] \land i = |s|\}$\\
+    $B \equiv \{i < |s|\}$\\
+    $I \equiv \{0 \leq i \leq |s| \land res = \sum_{j=0}^{i-1} s[j]\}$
+
+    \begin{enumerate}
+        \item $P_c \implies I$\\ 
+        $\iff res = 0 \land i = 0 \implies 0 \leq i \leq |s| \land res = \sum_{j=0}^{i-1} s[j]$
+        $i = 0 \implies 0 \leq 0 \leq |s| \checkmark$
+
+        \item $\{I \land B\}S\{I\}$ \\
+        Como es un ciclo, para ver que la tripla de Hoare es valida uso: $P \implies wp(S, Q)$ \\
+        $\{I \land B\} \implies wp(S, I)$ 
+        \begin{itemize}
+            \item $wp(S, I) \equiv wp(res := res + s[i]; i:= i + 1, 0 \leq i \leq |s| \land res = \sum_{j=0}^{i-1} s[j])$ \\
+            $\equiv_{ax3} wp(res := res + s[i], wp(i:= i + 1, 0 \leq i \leq |s| \land res = \sum_{j=0}^{i-1} s[j]))$\\
+            $\equiv_{ax1} wp(res := res + s[i], def(i + 1) \yLuego 0 \leq i + 1 \leq |s| \land res = \sum_{j=0}^{i}s[j])$\\
+            $\equiv wp(res := res + s[i], 0 \leq i + 1 \leq |s| \land res = \sum_{j=0}^{i}s[j])$\\
+            $\equiv_{ax1} def(res + s[i]) \yLuego 0 \leq i + 1 \leq |s| \land res + s[i] = \sum_{j=0}^{i}s[j]$\\
+            $\equiv wp(s[i]) \yLuego -1 \leq i \leq |s| \land res = \sum_{j=0}^{i-1} s[j] + s[i]$\\
+            $\equiv 0 \leq i < |s| \yLuego -1 \leq i \leq |s| \land res = \sum_{j=0}^{i} s[j]$\\
+            $\equiv 0 \leq i < |s| \yLuego res = \sum_{j=0}^{i} s[j]$
+            \item $\{I \land B\} \equiv 0 \leq i \leq |s| \land res = \sum_{j=0}^{i-1} s[j] \land i < |s|$\\
+            $\equiv 0 \leq i < |s| \land res = \sum_{j=0}^{i-1} s[j]$
+        \end{itemize}
+        $\{I \land B\} \implies wp(S, I)$? sii \checkmark
+        \item $\{I \land \lnot B\} \implies Q_c$
+        \begin{itemize}
+            \item $\{I \land \lnot B\} \equiv 0 \leq i \leq |s| \land res = \sum_{j=0}^{i-1} s[j] \land i \geq |s|$\\
+            $\equiv |s| \leq i \leq |s| \land res = \sum_{j=0}^{i}s[j]$\\
+            $\equiv i = |s| \land res = \sum_{j=0}^{i-1} s[j]$\\
+            $\equiv Q_c$ \checkmark
+        \end{itemize}    
+    \end{enumerate}
+\end{itemize}
+
+
+\end{document}
