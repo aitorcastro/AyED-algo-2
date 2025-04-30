@@ -32,6 +32,7 @@
 
 \maketitle
 
+\newpage
 \textbf{Ejercicio 1.}
 \begin{itemize}
     \item [a)] Precondici\'on: $P_c \equiv \{res = 0 \land i = 0\}$
@@ -67,13 +68,79 @@
             $\equiv 0 \leq i < |s| \land res = \sum_{j=0}^{i-1} s[j]$
         \end{itemize}
         $\{I \land B\} \implies wp(S, I)$? sii \checkmark
-        \item $\{I \land \lnot B\} \implies Q_c$
+        \item $(I \land \lnot B) \implies Q_c$
         \begin{itemize}
             \item $\{I \land \lnot B\} \equiv 0 \leq i \leq |s| \land res = \sum_{j=0}^{i-1} s[j] \land i \geq |s|$\\
             $\equiv |s| \leq i \leq |s| \land res = \sum_{j=0}^{i}s[j]$\\
             $\equiv i = |s| \land res = \sum_{j=0}^{i-1} s[j]$\\
             $\equiv Q_c$ \checkmark
         \end{itemize}    
+    \end{enumerate}
+    Queda probado que el ciclo es parcialmente correcto.
+    
+    \item [f)] Una posible funcion variante es $F_v = |s| - i$, para probar que el ciclo termina debo probar que:
+    \begin{enumerate}
+        \item $\{I \land B \land v_0 = fv\} S \{fv < v_0\}$
+        \item $I \land fv \leq 0 \implies \lnot B$
+    \end{enumerate}
+\end{itemize}
+
+\newpage
+\textbf{Ejercicio 2.} 
+\begin{itemize}
+    \item [a)] Precondici\'on: $P_c \equiv \{n \geq 0 \land i = 0 \land res = 0\}$\\
+    Postcondici\'on: $Q_c \equiv \{res = \sum_{j=0}^{n-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))\}$
+    \item [b)] Primero interpretemos que hace el ciclo, que es bacicamente el nombre, suma todos los numeros pares desde 0 hasta n. Esto lo hace empezando i en 0 e incrementando en 2 y sumando i todas las veces antes de incrementar.
+    Uso:
+    \begin{itemize}
+        \item $P_c \equiv \{n \geq 0 \land i = 0 \land res = 0\}$
+        \item $Q_c \equiv \{res = \sum_{j=0}^{n-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))\}$
+        \item $B \equiv \{i < n\}$
+        \item $I \equiv \{0 \leq i \leq n + 1 \land i mod 2 = 0 \land res = \sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))\}$
+    \end{itemize}
+    Empecemos la demostraci\'on de la correcci\'on parcial:
+    \begin{enumerate}
+        \item $P_c \implies I$\\
+        Si partimos de que $n \geq 0 \land i = 0 \land res = 0$ luego reemplazando en el invariante:\\
+        $0 \leq 0 \leq n + 1 \land 0 mod 2 = 0 \land 0 = \sum_{j=0}^{0-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$\\
+        $\equiv 0 \leq 0 \leq n + 1 \land 0 = 0 \land 0 = 0 \equiv \True$ \checkmark
+
+        \item $\{I \land B\}S\{I\}$\\
+        Como es un ciclo, para ver que la tripla de Hoare es valida uso: $P \implies wp(S, Q)$ 
+    
+        \begin{itemize}
+            \item $wp(S, I)$\\
+            $\equiv wp(res := res + i; i:= i + 2, 0 \leq i \leq n + 1 \land i mod 2 = 0 \land res = \displaystyle\displaystyle\sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0)))$\\
+            $\equiv_{ax3} wp(res := res + i, wp(i:= i + 2, 0 \leq i \leq n + 1 \land i mod 2 = 0 \land res = \displaystyle\sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))))$
+            \begin{itemize}
+                \item $wp(i:= i + 2, 0 \leq i \leq n + 1 \land i mod 2 = 0 \land res = \displaystyle\sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0)))$\\
+                $\equiv_{ax1} def(i+2) \yLuego 0 \leq i + 2 \leq n + 1 \land i + 2\ mod\ 2 = 0 \land res = \displaystyle\displaystyle\sum_{j =0}^{i + 1}(IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$\\
+                $\equiv 0 \leq i + 2 \leq n + 1 \land i\ mod\ 2 = 0 \land res = \displaystyle\sum_{j =0}^{i + 1}(IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$
+            \end{itemize}
+            $\equiv_{ax1} def(res + i) \yLuego 0 \leq i + 2 \leq n + 1 \land i\ mod\ 2 = 0 \land res + i = \displaystyle\sum_{j =0}^{i + 1}(IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$\\
+            $\equiv 0 \leq i + 2 \leq n + 1 \land i\ mod\ 2 = 0 \land res + i = \displaystyle\sum_{j =0}^{i + 1}(IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$\\
+            $\equiv_{ax1} 0 \leq i + 2 \leq n + 1 \land i\ mod\ 2 = 0 \land res + i = \displaystyle\sum_{j =0}^{i + 1}(IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$\\
+            $\equiv 0 \leq i + 2 \leq n + 1 \land i\ mod\ 2 = 0 \land res = \displaystyle\sum_{j =0}^{i + 1}(IfThenElse(j\ mod\ 2 = 0,\ j,\ 0)) - i$\\
+            $\equiv_{ax1} 0 \leq i + 2 \leq n + 1 \land i\ mod\ 2 = 0 \land res = \displaystyle\sum_{j =0}^{i - 1}(IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$\\
+            Ac\'a lo que hago es sacar al i de la suma (pq lo tenia que restar) entonces para hacer eso hago que la sumatoria vaya hasta el anterior a i (i - 1) y no tengo que agregar el i + 1 que saque porque como i es par, i + 1 es impar entonces la sumatoria no lo tenia en cuenta pro el if.
+            \item $\{I \land B\} \equiv 0 \leq i \leq n + 1 \land i mod 2 = 0 \land res = \sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0)) \land i < n$\\
+            $\equiv 0 \leq i < n \land i mod 2 = 0 \land res = \sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$ \\
+            Para dejarlo igual que la wp tenqgo que ver que si $0 \leq i$ entonces $0 \leq i + 2$ y si $i < n$ entonces $i + 2 < n + 2$ y como $n + 2 \geq n + 1$ entonces $i + 2 < n + 1$ y por lo tanto $0 \leq i + 2 \leq n + 1$ ahora si lo tengo igual que la wp entonces vale. $\{I \land B\} \implies wp(S, I)$? sii \checkmark
+        \end{itemize}
+        \item $(I \land \lnot B) \implies Q_c$
+        \begin{itemize}
+            \item $\{I \land \lnot B\} \equiv 0 \leq i \leq n + 1 \land i mod 2 = 0 \land res = \sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0)) \land i \geq n$\\
+            $\equiv n \leq i \leq n + 1 \land i mod 2 = 0 \land res = \sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$\\
+            $\equiv i = n + 1 \land i mod 2 = 0 \land res = \sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))$\\
+            $\equiv Q_c$ \checkmark
+        \end{itemize}
+    \end{enumerate}
+
+    \item [c)] La funcion variante tiene que decrecer y ser 0 cuadno se deje de ejecutar el ciclo (se cumple $\lnot B$). La variable que cambia de valor es i (que aumenta de 2 en 2) y la variable que no cambia de valor es n. Luego podemos usar $f_v = n - i$ peeero, cuando se deje de cumplir B, $f_v$ no va a ser 0 para que esto pase hacemos $f_v = n + 2 - i$ y ahora si ya la tenemos.\\
+    Para mostrar que el ciclo termina tengo que probar que:
+    \begin{enumerate}
+        \item $\{I \land B \land v_0 = fv\} S \{fv < v_0\}$
+        \item $I \land fv \leq 0 \implies \lnot B$
     \end{enumerate}
 \end{itemize}
 
