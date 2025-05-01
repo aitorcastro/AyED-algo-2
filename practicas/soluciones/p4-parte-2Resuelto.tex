@@ -140,7 +140,37 @@
     Para mostrar que el ciclo termina tengo que probar que:
     \begin{enumerate}
         \item $\{I \land B \land v_0 = fv\} S \{fv < v_0\}$
+        Tengo que probar que $I \land B \land v_0 = f \implies wp(S, f_v < v_0)$
+        \begin{itemize}
+            \item $wp(S, f_v < v_0)$\\
+            $\equiv wp(res := res + i; i:= i + 2, n + 2 - i < v_0)$\\
+            $\equiv_{ax3} wp(res := res + i, wp(i:= i + 2, n + 2 - i < v_0))$\\
+            $\equiv_{ax1} wp(res := res + i, n + 2 - (i + 2) < v_0)$\\
+            $\equiv wp(res := res + i, n - i < v_0)$\\
+            $\equiv_{ax1} def(res + i) \yLuego n - i < v_0$\\
+            $\equiv n - i < v_0$
+
+            \item $I \land B \land v_0 = fv$\\
+            $\equiv \{0 \leq i \leq n + 1 \land i mod 2 = 0 \land res = \sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0))\} \land i < n \land n + 2 - i = v_0$\\
+            Quiero probar la implicacion entonces res no me importa:\\
+            $0 \leq i \leq n + 1 \land i mod 2 = 0 \land i < n \land n + 2 - i = v_0$\\
+            $\equiv 0 \leq i < n \land i mod 2 = 0 \land n + 2 - i = v_0$
+        \end{itemize}
+        Ahora quiero ver que:
+        $ 0 \leq i < n \land i mod 2 = 0 \land n + 2 - i = v_0 \implies n - i < v_0$\\
+        Que en realidad lo que quiero ver es:
+        $n + 2 - i = v_0 \implies n - i < n + 2 - i$\\
+        $\equiv n - i < n + 2 - i$ Que es trivialmente cierto \checkmark
+
         \item $I \land fv \leq 0 \implies \lnot B$
+        \begin{itemize}
+            \item $I \land fv \leq 0$\\ 
+            $\equiv 0 \leq i \leq n + 1 \land i mod 2 = 0 \land res = \sum_{j=0}^{i-1} (IfThenElse(j\ mod\ 2 = 0,\ j,\ 0)) \land n + 1 - i \leq 0$\\
+            Queiro ver que esto implica $\lnot B \equiv i \geq n$\\
+            Se que $0 \leq i \leq n + 1 \land n + 1 - i \leq 0$\\
+            $\equiv n + 1 \leq i \leq n + 1 \equiv n + 1 = i$\\
+            Y como $n + 1 \geq n$ Se cumple \checkmark
+        \end{itemize}
     \end{enumerate}
 \end{itemize}
 
